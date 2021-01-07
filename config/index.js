@@ -15,9 +15,10 @@ module.exports = {
     proxyTable: devEnv.OPEN_PROXY === false ? {} : {
       '/proxyApi': {
         target: 'http://localhost:51110/manage/',
+        // target: 'http://192.144.229.232:51120/manage/',
         changeOrigin: true,
         pathRewrite: {
-          '^/proxyApi': '/'
+          '^/prod-api': '/'
         }
       }
     },
