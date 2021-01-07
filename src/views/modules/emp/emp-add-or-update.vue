@@ -26,9 +26,9 @@
         <el-select v-model="dataForm.superId" filterable placeholder="请选择上级">
           <el-option
             v-for="(item,index) in options"
-            :key="item.value"
+            :key="item.userId"
             :label="item.chineseName"
-            :value="item.superId">
+            :value="item.userId">
           </el-option>
         </el-select>
       </el-form-item>
