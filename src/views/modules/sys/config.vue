@@ -16,48 +16,50 @@
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        width="80"
-        label="ID">
-      </el-table-column>
-      <el-table-column
-        prop="paramKey"
-        header-align="center"
-        align="center"
-        label="参数名">
-      </el-table-column>
-      <el-table-column
-        prop="paramValue"
-        header-align="center"
-        align="center"
-        label="参数值">
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        header-align="center"
-        align="center"
-        label="备注">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        header-align="center"
-        align="center"
-        width="150"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
+      <template slot-scope="scope">
+        <el-table-column v-for="(item, index) in scope.row.data" :key="index"
+          type="selection"
+          header-align="center"
+          align="center"
+          width="50">
+        </el-table-column>
+        <el-table-column v-for="(item, index) in scope.row.data" :key="index"
+          prop="item.paramId"
+          header-align="center"
+          align="center"
+          width="80"
+          label="ID">
+        </el-table-column>
+        <el-table-column v-for="(item, index) in scope.row.data" :key="index"
+          prop="item.paramName"
+          header-align="center"
+          align="center"
+          label="参数名">
+        </el-table-column>
+        <el-table-column v-for="(item, index) in scope.row.data" :key="index"
+          prop="item.paramValue"
+          header-align="center"
+          align="center"
+          label="参数值">
+        </el-table-column>
+        <el-table-column v-for="(item, index) in scope.row.data" :key="index"
+          prop="item.remark"
+          header-align="center"
+          align="center"
+          label="备注">
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          header-align="center"
+          align="center"
+          width="150"
+          label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+            <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </template>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -101,7 +103,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/config/list'),
+          url: this.$http.adornUrl('/manage-param/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -140,6 +142,13 @@
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
         })
+      },
+      print (id) {
+        console.log(id)
+        // this.addOrUpdateVisible = true
+        // this.$nextTick(() => {
+        //   this.$refs.addOrUpdate.init(id)
+        // })
       },
       // 删除
       deleteHandle (id) {

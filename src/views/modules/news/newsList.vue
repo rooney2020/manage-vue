@@ -2,7 +2,7 @@
   <div class="mod-newsList">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.userName" placeholder="新闻标题" clearable></el-input>
+        <el-input v-model="dataForm.title" placeholder="新闻标题" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -116,7 +116,7 @@ export default {
   data () {
     return {
       dataForm: {
-        userName: ''
+        title: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -177,11 +177,11 @@ export default {
         params: this.$http.adornParams({
           'page': this.pageIndex,
           'limit': this.pageSize,
-          'username': this.dataForm.userName
+          'title': this.dataForm.title
         })
       }).then(({data}) => {
         if (data && data.code === 0) {
-          this.dataList = data.data
+          this.dataList = data.data.list
           this.dataList.forEach(el=>{
             el.imageUrl='http://192.144.229.232:51120'+el.imageUrl
             if(el.isActive===0){
@@ -191,7 +191,7 @@ export default {
             }
           })
           console.log(this.dataList)
-          this.totalPage = data.total
+          this.totalPage = data.data.totalPage
         } else {
           this.dataList = []
           this.totalPage = 0
