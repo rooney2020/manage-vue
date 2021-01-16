@@ -125,3 +125,13 @@
   }
 </script>
 
+<style>
+/*全局处理 表格错位问题*/
+.el-table th.gutter{
+  display: table-cell!important;
+}
+ .el-table colgroup.gutter{
+  display: table-cell!important;
+}
+
+</style>

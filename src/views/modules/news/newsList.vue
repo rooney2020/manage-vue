@@ -191,7 +191,7 @@ export default {
             }
           })
           console.log(this.dataList)
-          this.totalPage = data.data.totalPage
+          this.totalPage = data.data.totalCount
         } else {
           this.dataList = []
           this.totalPage = 0
