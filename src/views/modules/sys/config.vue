@@ -13,7 +13,7 @@
     <el-table
       :data="dataList"
       border
-      row-key="groupId"
+      row-key="uuid"
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;"
@@ -172,7 +172,7 @@ export default {
       }).then(({data}) => {
         if (data && data.code === 0) {
           console.log(data.page.list)
-          // this.dataList = data.page.list
+          this.dataList = data.page.list
           this.totalPage = data.page.totalCount
 
         } else {

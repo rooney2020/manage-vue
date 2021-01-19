@@ -82,7 +82,7 @@
         width="100"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" >处理</el-button>
+          <el-button type="text" size="small" @click="operate()">处理</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -95,16 +95,15 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-<!--    <newsAdd ref="addData"></newsAdd>-->
-<!--    <newsUpdata ref="editData"></newsUpdata>-->
+    <operate ref="operate"></operate>
   </div>
 </template>
 
 <script>
-
+import operate from './operate'
 export default {
   components:{
-
+    operate
   },
   data () {
     return {
@@ -126,6 +125,10 @@ export default {
     this.getDataList()
   },
   methods: {
+    //处理
+    operate(){
+      this.$refs.operate.openDialog(true)
+    },
     // 获取数据列表
     getDataList (status) {
       if(status===undefined){
