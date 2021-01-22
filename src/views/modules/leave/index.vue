@@ -1,9 +1,10 @@
 <template>
-  <div class="mod-manage">
+  <div class="mod-index">
     <el-row class="btnGroup">
-      <el-button plain @click="getDataList()" :class="{activeFlag:activeFlag===''}">全部</el-button>
-      <el-button plain @click="getDataList(1)">已处理</el-button>
-      <el-button plain @click="getDataList(0)">未处理</el-button>
+      <el-button plain @click="getDataList(0)" :class="{activeFlag:activeFlag===0}">未审核</el-button>
+      <el-button plain @click="getDataList(1)">批准</el-button>
+      <el-button plain @click="getDataList(2)">拒绝</el-button>
+      <el-button plain @click="getDataList()">全部</el-button>
     </el-row>
     <el-table
       :data="dataList"
@@ -18,62 +19,82 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="feedId"
+        prop="leaveId"
         header-align="center"
         align="center"
         width="80"
-        label="反馈ID">
+        label="假条ID">
       </el-table-column>
       <el-table-column
         prop="userId"
         header-align="center"
         align="center"
-        label="反馈人ID"
-        >
+        label="请假人ID"
+      >
       </el-table-column>
       <el-table-column
-        prop="mobile"
-        header-align="center"
-        align="center"
-        label="反馈人手机号"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="content"
-        header-align="center"
-        align="center"
-        label="反馈内容"
-        :show-overflow-tooltip="true">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        label="反馈时间">
-      </el-table-column>
-      <el-table-column
-        header-align="center"
-        align="center"
-        label="状态"
-        >
-        <template slot-scope="scope">
-          <span v-show="scope.row.status===0">未处理</span>
-          <span v-show="scope.row.status===1">已处理</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="resolveUserId"
+        prop="dealId"
         header-align="center"
         align="center"
         label="处理人ID"
       >
       </el-table-column>
       <el-table-column
+        prop="beginTime"
+        header-align="center"
+        align="center"
+        label="开始时间"
+        :show-overflow-tooltip="true">
+      </el-table-column>
+      <el-table-column
+        prop="endTime"
+        header-align="center"
+        align="center"
+        label="结束时间">
+      </el-table-column>
+      <el-table-column
         prop="etlTime"
         header-align="center"
         align="center"
-        label="处理时间"
+        label="处理时间">
+      </el-table-column>
+      <el-table-column
+        prop="createTime"
+        header-align="center"
+        align="center"
+        label="申请时间"
       >
+      </el-table-column>
+      <el-table-column
+        prop="totalCount"
+        header-align="center"
+        align="center"
+        label="请假总工时">
+      </el-table-column>
+      <el-table-column
+        header-align="center"
+        align="center"
+        label="请假类型"
+      >
+        <template slot-scope="scope">
+          <span v-show="scope.row.leaveType===0">带薪假</span>
+          <span v-show="scope.row.leaveType===1">病假</span>
+          <span v-show="scope.row.leaveType===2">无薪假</span>
+          <span v-show="scope.row.leaveType===3">事假</span>
+          <span v-show="scope.row.leaveType===4">年假</span>
+          <span v-show="scope.row.leaveType===5">居家办公</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        header-align="center"
+        align="center"
+        label="状态"
+      >
+        <template slot-scope="scope">
+          <span v-show="scope.row.status===0">创建</span>
+          <span v-show="scope.row.status===1">批准</span>
+          <span v-show="scope.row.status===2">拒绝</span>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -82,7 +103,7 @@
         width="100"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="operate(scope.row.feedId)" :disabled="scope.row.status===1?true:false">处理</el-button>
+          <el-button type="text" size="small" @click="operate(scope.row.leaveId)" :disabled="scope.row.status!==0?true:false">处理</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,7 +131,7 @@ export default {
       dataForm: {
         title: ''
       },
-      activeFlag:'',
+      activeFlag:0,
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
@@ -122,7 +143,7 @@ export default {
   },
   //在vue对象存活的情况下，进入当前存在activated()函数的页面时，一进入页面就触发；可用于初始化页面数据等
   activated () {
-    this.getDataList()
+    this.getDataList(0)
   },
   methods: {
     //处理
@@ -137,14 +158,12 @@ export default {
       this.activeFlag=status
       this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl('/manage-feedback/list'),
+        url: this.$http.adornUrl('/manage-leave/list'),
         method: 'get',
         params: this.$http.adornParams({
           'page': this.pageIndex,
           'limit': this.pageSize,
           'status':status,
-          'resolveUserId':'',
-          'userId':''
         })
       }).then(({data}) => {
         if (data && data.code === 0) {
@@ -179,11 +198,11 @@ export default {
 }
 </script>
 <style scoped>
-  .btnGroup{
-    margin-bottom:20px;
-  }
-  .activeFlag{
-    border-color: #17B3A3;
-    color: #17B3A3;
-  }
+.btnGroup{
+  margin-bottom:20px;
+}
+.activeFlag{
+  border-color: #17B3A3;
+  color: #17B3A3;
+}
 </style>

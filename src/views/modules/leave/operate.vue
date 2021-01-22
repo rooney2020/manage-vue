@@ -1,11 +1,21 @@
 <template>
   <el-dialog
-    title="反馈处理"
+    title="请假处理"
     :close-on-click-modal="false"
-    :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm"  label-width="80px">
-      <el-form-item label="处理意见" prop="content">
-        <el-input type="textarea" v-model="dataForm.content"></el-input>
+    :visible.sync="visible"
+    width="25%"
+  >
+    <el-form :model="dataForm" ref="dataForm"  label-width="80px">
+      <el-form-item label="处理意见" prop="status">
+        <el-switch
+          style="display: block;margin-top: 8px"
+          v-model="dataForm.status"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          active-text="批准"
+          inactive-text="拒绝"
+        >
+        </el-switch>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -20,14 +30,9 @@ export default {
   data () {
     return {
       visible: false,
-      feedId: '',
+      leaveId: '',
       dataForm: {
-        content:''
-      },
-      dataRule: {
-        content: [
-          { required: true, message: '新闻内容不可为空', trigger: 'blur' }
-        ],
+        status:true
       }
     }
   },
@@ -36,18 +41,17 @@ export default {
     openDialog(flag, val) {
       console.log(val)
       this.visible = flag;
-      this.feedId=val
+      this.leaveId=val
     },
     // 表单提交
     dataFormSubmit () {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
+      let status=this.dataForm.status===true?1:2
           this.$http({
-            url: this.$http.adornUrl('/manage-feedback/update'),
+            url: this.$http.adornUrl('/manage-leave/deal'),
             method: 'post',
             data: this.$http.adornData({
-              'feedId':this.feedId,
-              'resolveContent':this.dataForm.content,
+              'leaveId':this.leaveId,
+              'status':status,
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
@@ -55,18 +59,20 @@ export default {
                 message: '操作成功',
                 type: 'success',
               })
-              this.dataForm.content=''
               this.visible=false
-              this.$parent.getDataList()
+              this.$parent.getDataList(0)
             } else {
               this.$message.error(data.msg)
             }
           })
-        }
-      })
     }
   }
 }
 </script>
+<style scoped>
+/deep/.el-dialog{
+  width: 25%!important;
+}
+</style>
 
 

@@ -30,6 +30,7 @@
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
             </el-form-item>
           </el-form>
+<!--          <el-progress :percentage="50"></el-progress>-->
         </div>
       </div>
     </div>

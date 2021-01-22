@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增参数组</el-button>
         <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -29,7 +29,7 @@
       <el-table-column
         prop="groupId"
         sortable
-        label="组件ID"
+        label="组ID"
         align="center"
         width="180">
       </el-table-column>
@@ -40,7 +40,7 @@
         width="180">
       </el-table-column>
       <el-table-column
-        prop="paramID"
+        prop="paramId"
         label="参数ID"
         align="center"
         width="180">
@@ -67,57 +67,14 @@
         fixed="right"
         header-align="center"
         align="center"
-        width="100"
+        width="200"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-button type="text" size="small" @click="configADD(scope.row.groupId)" v-if="!scope.row.paramId">新增参数</el-button>
+          <el-button type="text" size="small" @click="configUpdata(scope.row)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteConfig(scope.row)">删除</el-button>
         </template>
       </el-table-column>
-      <!--      <template slot-scope="scope">-->
-      <!--        <el-table-column v-for="(item, index) in scope.row.data" :key="index"-->
-      <!--          type="selection"-->
-      <!--          header-align="center"-->
-      <!--          align="center"-->
-      <!--          width="50">-->
-      <!--        </el-table-column>-->
-      <!--        <el-table-column v-for="(item, index) in scope.row.data" :key="index"-->
-      <!--          prop="item.paramId"-->
-      <!--          header-align="center"-->
-      <!--          align="center"-->
-      <!--          width="80"-->
-      <!--          label="ID">-->
-      <!--        </el-table-column>-->
-      <!--        <el-table-column v-for="(item, index) in scope.row.data" :key="index"-->
-      <!--          prop="item.paramName"-->
-      <!--          header-align="center"-->
-      <!--          align="center"-->
-      <!--          label="参数名">-->
-      <!--        </el-table-column>-->
-      <!--        <el-table-column v-for="(item, index) in scope.row.data" :key="index"-->
-      <!--          prop="item.paramValue"-->
-      <!--          header-align="center"-->
-      <!--          align="center"-->
-      <!--          label="参数值">-->
-      <!--        </el-table-column>-->
-      <!--        <el-table-column v-for="(item, index) in scope.row.data" :key="index"-->
-      <!--          prop="item.remark"-->
-      <!--          header-align="center"-->
-      <!--          align="center"-->
-      <!--          label="备注">-->
-      <!--        </el-table-column>-->
-      <!--        <el-table-column-->
-      <!--          fixed="right"-->
-      <!--          header-align="center"-->
-      <!--          align="center"-->
-      <!--          width="150"-->
-      <!--          label="操作">-->
-      <!--          <template slot-scope="scope">-->
-      <!--            <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>-->
-      <!--            <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>-->
-      <!--          </template>-->
-      <!--        </el-table-column>-->
-      <!--      </template>-->
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -129,12 +86,16 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <configAdd ref="configAdd"></configAdd>
+    <AddConfigGroup ref="AddConfigGroup"></AddConfigGroup>
+    <configUpdata ref="configUpdata"></configUpdata>
   </div>
 </template>
 
 <script>
-import AddOrUpdate from './config-add-or-update'
+import configAdd from './config-add'
+import AddConfigGroup from './configGroup-add'
+import configUpdata from './configUpdata'
 
 export default {
   data () {
@@ -143,6 +104,8 @@ export default {
         paramKey: ''
       },
       dataList: [],
+      canshu:[],
+      canshuGroup:[],
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
@@ -152,7 +115,9 @@ export default {
     }
   },
   components: {
-    AddOrUpdate
+    configAdd,
+    AddConfigGroup,
+    configUpdata
   },
   activated () {
     this.getDataList()
@@ -167,7 +132,7 @@ export default {
         params: this.$http.adornParams({
           'page': this.pageIndex,
           'limit': this.pageSize,
-          'paramKey': this.dataForm.paramKey
+          'name': this.dataForm.paramKey
         })
       }).then(({data}) => {
         if (data && data.code === 0) {
@@ -197,48 +162,128 @@ export default {
     selectionChangeHandle (val) {
       this.dataListSelections = val
     },
-    // 新增 / 修改
-    addOrUpdateHandle (id) {
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id)
-      })
+    // 新增参数组
+    addOrUpdateHandle () {
+      this.$refs.AddConfigGroup.init(true)
     },
-    print (id) {
-      console.log(id)
-      // this.addOrUpdateVisible = true
-      // this.$nextTick(() => {
-      //   this.$refs.addOrUpdate.init(id)
-      // })
+    //新增参数
+    configADD(a){
+      this.$refs.configAdd.init(true,JSON.parse(JSON.stringify(a)))
+    },
+    //修改
+    configUpdata(a){
+      this.$refs.configUpdata.init(true,JSON.parse(JSON.stringify(a)))
     },
     // 删除
-    deleteHandle (id) {
-      var ids = id ? [id] : this.dataListSelections.map(item => {
-        return item.id
+    deleteConfig(a){
+      if(a.paramId){
+        let paramIds=[]
+        paramIds.push(a.paramId)
+        this.$confirm(`确定对参数ID为${a.paramId}的参树进行删除操作吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/manage-param/delete'),
+            method: 'post',
+            data:paramIds
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+              })
+              this.getDataList()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        }).catch(() => {
+        })
+      }else {
+        let groupIds=[]
+        groupIds.push(a.groupId)
+        this.$confirm(`确定对参数ID为${a.groupId}的参树进行删除操作吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/manage-paramgroup/delete'),
+            method: 'post',
+            data:groupIds
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+              })
+              this.getDataList()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        }).catch(() => {
+        })
+      }
+
+    },
+    //批量删除
+    deleteHandle () {
+      this.dataListSelections.forEach(el=>{
+        if(el.paramId){
+          this.canshu.push(el.paramId)
+        }else{
+          this.canshuGroup.push(el.groupId)
+        }
       })
-      this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+      this.$confirm(`确定对选中的参数进行删除操作吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http({
-          url: this.$http.adornUrl('/sys/config/delete'),
-          method: 'post',
-          data: this.$http.adornData(ids, false)
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: '操作成功',
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.getDataList()
-              }
-            })
-          } else {
-            this.$message.error(data.msg)
-          }
-        })
+        if(this.canshu!==[]){
+          this.$http({
+            url: this.$http.adornUrl('/manage-param/delete'),
+            method: 'post',
+            data:this.canshu
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '删除选中参数成功',
+                type: 'success',
+                duration: 500,
+              })
+              this.getDataList()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        }
+        if(this.canshuGroup!==[]){
+          this.$http({
+            url: this.$http.adornUrl('/manage-paramgroup/delete'),
+            method: 'post',
+            data:this.canshuGroup
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '删除选中参数组成功',
+                type: 'success',
+                duration: 500,
+              })
+              this.getDataList()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        }
+
+        this.canshuGroup=[]
+        this.canshu=[]
       }).catch(() => {
       })
     }

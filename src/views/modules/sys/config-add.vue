@@ -1,11 +1,11 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    title="新增参数"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-      <el-form-item label="参数名" prop="paramKey">
-        <el-input v-model="dataForm.paramKey" placeholder="参数名"></el-input>
+      <el-form-item label="参数名" prop="paramName">
+        <el-input v-model="dataForm.paramName" placeholder="参数名"></el-input>
       </el-form-item>
       <el-form-item label="参数值" prop="paramValue">
         <el-input v-model="dataForm.paramValue" placeholder="参数值"></el-input>
@@ -26,14 +26,14 @@
     data () {
       return {
         visible: false,
+        groupId:'',
         dataForm: {
-          id: 0,
-          paramKey: '',
+          paramName: '',
           paramValue: '',
           remark: ''
         },
         dataRule: {
-          paramKey: [
+          paramName: [
             { required: true, message: '参数名不能为空', trigger: 'blur' }
           ],
           paramValue: [
@@ -43,36 +43,20 @@
       }
     },
     methods: {
-      init (id) {
-        this.dataForm.id = id || 0
-        this.visible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].resetFields()
-          if (this.dataForm.id) {
-            this.$http({
-              url: this.$http.adornUrl(`/sys/config/info/${this.dataForm.id}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.paramKey = data.config.paramKey
-                this.dataForm.paramValue = data.config.paramValue
-                this.dataForm.remark = data.config.remark
-              }
-            })
-          }
-        })
+      init (a,b) {
+        this.visible = a
+        this.groupId=b
       },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/sys/config/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl('/manage-param/save'),
               method: 'post',
               data: this.$http.adornData({
-                'id': this.dataForm.id || undefined,
-                'paramKey': this.dataForm.paramKey,
+                'groupId':this.groupId,
+                'paramName': this.dataForm.paramName,
                 'paramValue': this.dataForm.paramValue,
                 'remark': this.dataForm.remark
               })
@@ -82,11 +66,10 @@
                   message: '操作成功',
                   type: 'success',
                   duration: 1500,
-                  onClose: () => {
-                    this.visible = false
-                    this.$emit('refreshDataList')
-                  }
                 })
+                this.$parent.getDataList();
+                this.visible = false
+                this.$refs['dataForm'].resetFields()
               } else {
                 this.$message.error(data.msg)
               }

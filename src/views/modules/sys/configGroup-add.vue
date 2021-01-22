@@ -1,11 +1,11 @@
 <template>
   <el-dialog
-    title="反馈处理"
+    title="新增参数组"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm"  label-width="80px">
-      <el-form-item label="处理意见" prop="content">
-        <el-input type="textarea" v-model="dataForm.content"></el-input>
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+      <el-form-item label="组名" prop="paramKey">
+        <el-input v-model="dataForm.groupName" placeholder="参数名"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -20,44 +20,40 @@ export default {
   data () {
     return {
       visible: false,
-      feedId: '',
       dataForm: {
-        content:''
+        groupName:''
       },
       dataRule: {
-        content: [
-          { required: true, message: '新闻内容不可为空', trigger: 'blur' }
-        ],
+        groupName: [
+          { required: true, message: '组名不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
   methods: {
-    //页面开关
-    openDialog(flag, val) {
-      console.log(val)
-      this.visible = flag;
-      this.feedId=val
+    init () {
+      this.visible = true
     },
     // 表单提交
     dataFormSubmit () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.$http({
-            url: this.$http.adornUrl('/manage-feedback/update'),
+            url: this.$http.adornUrl('/manage-paramgroup/save'),
             method: 'post',
             data: this.$http.adornData({
-              'feedId':this.feedId,
-              'resolveContent':this.dataForm.content,
+              groupName:this.dataForm.groupName
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({
                 message: '操作成功',
                 type: 'success',
+                duration: 1500,
               })
-              this.dataForm.content=''
-              this.visible=false
-              this.$parent.getDataList()
+              this.$parent.getDataList();
+              this.visible = false
+              this.$refs['dataForm'].resetFields()
             } else {
               this.$message.error(data.msg)
             }
@@ -68,5 +64,4 @@ export default {
   }
 }
 </script>
-
 
