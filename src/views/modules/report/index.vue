@@ -159,6 +159,8 @@ name: "index",
     },
     //获得市区
     getCity(){
+      this.dataForm.area=''
+      this.dataForm.city=''
       this.$http({
         url: this.$http.adornUrl('/manage-param/cities'),
         method: 'get',
@@ -173,8 +175,9 @@ name: "index",
     },
     //获得区县
     getArea(){
+      this.dataForm.area=''
       this.$http({
-        url: this.$http.adornUrl('/manage-param/cities'),
+        url: this.$http.adornUrl('/manage-param/areas'),
         method: 'get',
         params: this.$http.adornParams({
           'code':this.dataForm.city
