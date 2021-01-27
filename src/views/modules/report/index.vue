@@ -47,6 +47,7 @@
           <el-checkbox :label="item.paramId" v-for="(item,index) in epodemicData" :key="index">{{item.remark}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
+      <div v-show="dataForm.isVisit===1">
       <p>3、身体状况</p>
       <el-form-item>
         <el-radio-group v-model="dataForm.healthStatus">
@@ -78,6 +79,7 @@
           <el-radio :label="2">等待核酸结果</el-radio>
         </el-radio-group>
       </el-form-item>
+      </div>
       <el-form-item style="display: block">
         <el-button type="primary" @click="submitForm()">提交</el-button>
         <el-button @click="resetForm()">重置</el-button>

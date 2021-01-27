@@ -6,11 +6,16 @@ import VueCookie from 'vue-cookie'            // api: https://github.com/alfhen/
 import '@/element-ui'                         // api: https://github.com/ElemeFE/element
 import '@/icons'                              // api: http://www.iconfont.cn/
 import '@/element-ui-theme'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
 import '@/assets/scss/index.scss'
 import httpRequest from '@/utils/httpRequest' // api: https://github.com/axios/axios
 import { isAuth } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import axios from "axios"
+//高德地图
+import '../static/plugins/amap/amap'
 
 Vue.prototype.$axios = axios
 Vue.use(VueCookie)
