@@ -8,7 +8,7 @@
       <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
     </el-form-item>
     <el-form-item label="负责人id" prop="managerId">
-      <el-input v-model="dataForm.managerId" placeholder="负责人id"></el-input>
+      <el-input v-model="dataForm.managerId" placeholder="负责人"></el-input>
     </el-form-item>
     <el-form-item label="开始日期" prop="beginDate">
       <el-input v-model="dataForm.beginDate" placeholder="开始日期"></el-input>
@@ -21,18 +21,6 @@
     </el-form-item>
     <el-form-item label="备注" prop="comment">
       <el-input v-model="dataForm.comment" placeholder="备注"></el-input>
-    </el-form-item>
-    <el-form-item label="创建人" prop="createUserId">
-      <el-input v-model="dataForm.createUserId" placeholder="创建人"></el-input>
-    </el-form-item>
-    <el-form-item label="创建时间" prop="createTime">
-      <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
-    </el-form-item>
-    <el-form-item label="更新时间" prop="updateTime">
-      <el-input v-model="dataForm.updateTime" placeholder="更新时间"></el-input>
-    </el-form-item>
-    <el-form-item label="状态0：未开始，1：进行中，2：已完成，3：已关闭" prop="status">
-      <el-input v-model="dataForm.status" placeholder="状态0：未开始，1：进行中，2：已完成，3：已关闭"></el-input>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -65,7 +53,7 @@
             { required: true, message: '项目名称不能为空', trigger: 'blur' }
           ],
           managerId: [
-            { required: true, message: '负责人id不能为空', trigger: 'blur' }
+            { required: true, message: '负责人不能为空', trigger: 'blur' }
           ],
           beginDate: [
             { required: true, message: '开始日期不能为空', trigger: 'blur' }
@@ -78,18 +66,6 @@
           ],
           comment: [
             { required: true, message: '备注不能为空', trigger: 'blur' }
-          ],
-          createUserId: [
-            { required: true, message: '创建人不能为空', trigger: 'blur' }
-          ],
-          createTime: [
-            { required: true, message: '创建时间不能为空', trigger: 'blur' }
-          ],
-          updateTime: [
-            { required: true, message: '更新时间不能为空', trigger: 'blur' }
-          ],
-          status: [
-            { required: true, message: '状态0：未开始，1：进行中，2：已完成，3：已关闭不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -102,7 +78,7 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.projectId) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/manageproject/info/${this.dataForm.projectId}`),
+              url: this.$http.adornUrl(`/manage-project/info/${this.dataForm.projectId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
@@ -127,7 +103,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/manageproject/${!this.dataForm.projectId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/manage-project/${!this.dataForm.projectId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'projectId': this.dataForm.projectId || undefined,

@@ -26,7 +26,7 @@
         prop="projectId"
         header-align="center"
         align="center"
-        label="自增主键">
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="projectName"
@@ -38,7 +38,7 @@
         prop="managerId"
         header-align="center"
         align="center"
-        label="负责人id">
+        label="负责人">
       </el-table-column>
       <el-table-column
         prop="beginDate"
@@ -86,8 +86,9 @@
         prop="status"
         header-align="center"
         align="center"
-        label="状态0：未开始，1：进行中，2：已完成，3：已关闭">
+        label="状态">
       </el-table-column>
+      <!-- 0：未开始，1：进行中，2：已完成，3：已关闭 -->
       <el-table-column
         fixed="right"
         header-align="center"
@@ -142,7 +143,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/generator/manageproject/list'),
+          url: this.$http.adornUrl('/manage-project/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
