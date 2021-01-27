@@ -123,16 +123,16 @@ export default {
         if (data && data.code === 0) {
           this.dataList = data.page.list
           this.dataList.forEach(el=>{
-            if(el.upType===0){
-              el.upType='正常上班打卡'
-            }else{
+            if(el.upType!==0&&el.upType!==null){
               el.upType='外勤上班打卡'
+            }else{
+              el.upType='正常上班打卡'
             }
 
-            if(el.downType===0){
-              el.downType='正常下班打卡'
-            }else{
+            if(el.downType!==0&&el.downType!==null){
               el.downType='外勤下班打卡'
+            }else{
+              el.downType='正常下班打卡'
             }
           })
           this.totalPage = data.page.totalCount
