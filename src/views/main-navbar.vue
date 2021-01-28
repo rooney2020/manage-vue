@@ -39,7 +39,8 @@
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link" style="color: #ffffff">
               <img src="~@/assets/img/touxiang.jpeg" :alt="userName">{{ userName }}
-            </span>
+            </span> 
+            <span style="color: #ffffff" @click="msgHandle()"> 消息 {{ msgNum }}</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="updatePasswordHandle()">修改密码</el-dropdown-item>
               <el-dropdown-item @click.native="logoutHandle()">退出</el-dropdown-item>
@@ -59,8 +60,12 @@
   export default {
     data () {
       return {
-        updatePassowrdVisible: false
+        updatePassowrdVisible: false,
+        msgNum: 0
       }
+    },
+    activated () {
+      this.msgHandle()
     },
     components: {
       UpdatePassword
@@ -107,6 +112,19 @@
             }
           })
         }).catch(() => {})
+      },
+      msgHandle () {
+        console.log("giao")
+        this.$http({
+          url: this.$http.adornUrl('/manage-message/count'),
+          method: 'get',
+          data: this.$http.adornData()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.msgNum = data.count
+            console.log(data.count)
+          }
+        })
       }
     }
   }
