@@ -123,6 +123,7 @@
           if (data && data.code === 0) {
             this.msgNum = data.count
             console.log(data.count)
+            // this.$router.push({ name: 'msg-managemessage' })
           }
         })
       }
