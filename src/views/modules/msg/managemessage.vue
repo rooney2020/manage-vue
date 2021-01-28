@@ -77,6 +77,8 @@
   </div>
 </template>
 <script>
+  import mainNavbarVue from '../../main-navbar.vue'
+  var main = mainNavbarVue
   export default {
     data () {
       return {

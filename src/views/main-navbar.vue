@@ -40,7 +40,13 @@
             <span class="el-dropdown-link" style="color: #ffffff">
               <img src="~@/assets/img/touxiang.jpeg" :alt="userName">{{ userName }}
             </span> 
-            <span style="color: #ffffff" @click="msgHandle()"> 消息 {{ msgNum }}</span>
+            &nbsp;&nbsp;
+            <span style="color: #ffffff" @click="msgHandle()">
+              <svg aria-hidden="true" class="site-sidebar__menu-icon icon-svg icon-svg__pinglun">
+                <use xlink:href="#icon-pinglun"></use>
+              </svg>
+              <span v-if="msgNum!=0" style="color: red">未读{{ msgNum }}</span>
+            </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="updatePasswordHandle()">修改密码</el-dropdown-item>
               <el-dropdown-item @click.native="logoutHandle()">退出</el-dropdown-item>
@@ -64,8 +70,8 @@
         msgNum: 0
       }
     },
-    activated () {
-      this.msgHandle()
+    mounted:function () {
+      this.msgInit()
     },
     components: {
       UpdatePassword
@@ -113,7 +119,7 @@
           })
         }).catch(() => {})
       },
-      msgHandle () {
+      msgInit () {
         console.log("giao")
         this.$http({
           url: this.$http.adornUrl('/manage-message/count'),
@@ -123,9 +129,11 @@
           if (data && data.code === 0) {
             this.msgNum = data.count
             console.log(data.count)
-            // this.$router.push({ name: 'msg-managemessage' })
           }
         })
+      },
+      msgHandle () {
+        this.$router.push({ name: 'msg-managemessage' })
       }
     }
   }

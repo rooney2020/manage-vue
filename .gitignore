@@ -1,6 +1,5 @@
-.\dist
-.\dist.zip
-static/config/index.js
+dist
+dist.zip
 
 # Logs
 logs
