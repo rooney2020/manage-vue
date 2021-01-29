@@ -71,7 +71,7 @@
       }
     },
     mounted:function () {
-      this.msgInit()
+      this.auto()
     },
     components: {
       UpdatePassword
@@ -119,12 +119,18 @@
           })
         }).catch(() => {})
       },
+      auto(){
+        window.setInterval(() => {
+          setTimeout(this.msgInit, 0)
+        }, 2000)
+      },
       msgInit () {
         console.log("giao")
         this.$http({
           url: this.$http.adornUrl('/manage-message/count'),
           method: 'get',
           data: this.$http.adornData()
+
         }).then(({data}) => {
           if (data && data.code === 0) {
             this.msgNum = data.count
