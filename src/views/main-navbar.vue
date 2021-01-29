@@ -39,7 +39,7 @@
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link" style="color: #ffffff">
               <img src="~@/assets/img/touxiang.jpeg" :alt="userName">{{ userName }}
-            </span> 
+            </span>
             &nbsp;&nbsp;
             <span style="color: #ffffff" @click="msgHandle()">
               <svg aria-hidden="true" class="site-sidebar__menu-icon icon-svg icon-svg__pinglun">
