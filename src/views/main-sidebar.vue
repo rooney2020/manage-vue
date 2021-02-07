@@ -110,3 +110,8 @@
     }
   }
 </script>
+<style>
+.site-sidebar__inner{
+  overflow-x: hidden;
+}
+</style>

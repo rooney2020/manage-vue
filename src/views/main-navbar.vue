@@ -122,7 +122,7 @@
       auto(){
         window.setInterval(() => {
           setTimeout(this.msgInit, 0)
-        }, 2000)
+        }, 5000)
       },
       msgInit () {
         console.log("giao")

@@ -53,7 +53,7 @@ name: "index.vue",
       cityCode:'',
       menuContent:'',
       zoom: 5,
-      rightCenter: [116.59996, 39.197646],//公司经纬度
+      rightCenter: [],//公司经纬度
       events: {
         //初始化
         init(o){
@@ -65,6 +65,15 @@ name: "index.vue",
     }
   },
   mounted () {
+  this.$forceUpdate()
+    //获取公司位置
+    this.$http({
+      url: this.$http.adornUrl('/manage-param/location/get'),
+      method: 'get',
+      data: this.$http.adornData({})
+    }).then(({data}) => {
+      this.rightCenter=data.tudes
+    })
     this.getpunchData()
     //获取地图实例  兼容高德地图
     // lazyAMapApiLoaderInstance.load().then(() => {
@@ -131,7 +140,7 @@ name: "index.vue",
       //获取位置
       geolocation.getCurrentPosition(function(status,result){
         if(status==='complete'){
-          lnglatXY = [result.position.Q,result.position.R];
+          lnglatXY = [result.position.R,result.position.Q];
           _this.area=result.formattedAddress
           console.log(result.formattedAddress)
           console.log(lnglatXY)
@@ -139,7 +148,7 @@ name: "index.vue",
           //判断  是否在范围内
           var dis = AMap.GeometryUtil.distance(_this.rightCenter, lnglatXY);
           console.log(dis)
-          if(dis<1000){
+          if(dis<200){
             _this.menuContent=1
           }else{
             _this.menuContent=0

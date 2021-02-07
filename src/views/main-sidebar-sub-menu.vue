@@ -1,14 +1,15 @@
 <template>
-  <el-submenu 
+  <el-submenu
     v-if="menu.list && menu.list.length >= 1"
     :index="menu.menuId + ''"
-    :popper-class="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
+    :popper-class="'site-sidebar--' + sidebarLayoutSkin + '-popper'"
+  >
     <template slot="title">
       <icon-svg :name="menu.icon || ''" class="site-sidebar__menu-icon"></icon-svg>
       <span>{{ menu.name }}</span>
     </template>
     <sub-menu
-      v-for="item in menu.list" 
+      v-for="item in menu.list"
       :key="item.menuId"
       :menu="item"
       :dynamicMenuRoutes="dynamicMenuRoutes">
@@ -53,3 +54,6 @@
     }
   }
 </script>
+<style>
+
+</style>
