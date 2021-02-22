@@ -47,10 +47,14 @@
         label="严重程度">
       </el-table-column>
       <el-table-column
-        prop="status"
         header-align="center"
         align="center"
-        label="状态0,：激活，1：已解决，2：已关闭">
+        label="状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status===0">激活</span>
+          <span v-if="scope.row.status===1">已解决</span>
+          <span v-if="scope.row.status===2">已关闭</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="createUserId"
@@ -71,16 +75,32 @@
         label="指派给">
       </el-table-column>
       <el-table-column
-        prop="resolveMethod"
         header-align="center"
         align="center"
-        label="解决方案0：已解决，1：无法重现，2：待发测试，3：已发测试，4：设计问题，5：重复bug，6：延期处理，7：外部原因，8：不予解决">
+        label="解决方案">
+        <template slot-scope="scope">
+          <span v-if="scope.row.resolveMethod===0">已解决</span>
+          <span v-if="scope.row.resolveMethod===1">无法重现</span>
+          <span v-if="scope.row.resolveMethod===2">待发测试</span>
+          <span v-if="scope.row.resolveMethod===3">已发测试</span>
+          <span v-if="scope.row.resolveMethod===4">设计问题</span>
+          <span v-if="scope.row.resolveMethod===5">重复bug</span>
+          <span v-if="scope.row.resolveMethod===6">延期处理</span>
+          <span v-if="scope.row.resolveMethod===7">外部原因</span>
+          <span v-if="scope.row.resolveMethod===8">不予解决</span>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="bugType"
         header-align="center"
         align="center"
-        label="BUG类型0：代码错误，1：安全问题，2：性能问题，3：设计问题，4：其他">
+        label="BUG类型">
+        <template slot-scope="scope">
+          <span v-if="scope.row.bugType===0">代码错误</span>
+          <span v-if="scope.row.bugType===1">安全问题</span>
+          <span v-if="scope.row.bugType===2">性能问题</span>
+          <span v-if="scope.row.bugType===3">设计问题</span>
+          <span v-if="scope.row.bugType===3">其他</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="beginDate"

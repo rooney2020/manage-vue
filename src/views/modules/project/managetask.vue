@@ -41,10 +41,15 @@
         label="任务名称">
       </el-table-column>
       <el-table-column
-        prop="status"
         header-align="center"
         align="center"
-        label="状态0：未开始，1：进行中，2：已完成，3：已关闭">
+        label="状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status===0">未开始</span>
+          <span v-if="scope.row.status===1">进行中</span>
+          <span v-if="scope.row.status===2">已完成</span>
+          <span v-if="scope.row.status===3">已关闭</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="assigneeId"
@@ -104,7 +109,13 @@
         prop="taskType"
         header-align="center"
         align="center"
-        label="任务类型0：需求，1：前端开发，2：后端开发，3：其他">
+        label="任务类型">
+        <template slot-scope="scope">
+          <span v-if="scope.row.taskType===0">需求</span>
+          <span v-if="scope.row.taskType===1">前端开发</span>
+          <span v-if="scope.row.taskType===2">后端开发</span>
+          <span v-if="scope.row.taskType===3">其他</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="comment"

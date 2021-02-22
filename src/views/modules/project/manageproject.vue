@@ -2,7 +2,17 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.projectName" placeholder="项目名称" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.manageId" clearable placeholder="请选择负责人">
+          <el-option
+            v-for="(item,index) in citys"
+            :key="index"
+            :label="item.remark"
+            :value="item.paramName">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -126,7 +136,8 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          projectName: '',
+          manageId:''
         },
         dataList: [],
         pageIndex: 1,
