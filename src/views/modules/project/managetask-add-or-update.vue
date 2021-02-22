@@ -130,7 +130,7 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.taskId) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/managetask/info/${this.dataForm.taskId}`),
+              url: this.$http.adornUrl(`/manage-task/info/${this.dataForm.taskId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
@@ -159,7 +159,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/managetask/${!this.dataForm.taskId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/manage-task/${!this.dataForm.taskId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'taskId': this.dataForm.taskId || undefined,

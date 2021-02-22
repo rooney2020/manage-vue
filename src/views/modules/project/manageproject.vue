@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('generator:manageproject:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('generator:manageproject:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('project:manageproject:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('project:manageproject:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -83,10 +83,15 @@
         label="更新时间">
       </el-table-column>
       <el-table-column
-        prop="status"
         header-align="center"
         align="center"
         label="状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status===0">未开始</span>
+          <span v-if="scope.row.status===1">进行中</span>
+          <span v-if="scope.row.status===2">已完成</span>
+          <span v-if="scope.row.status===3">已关闭</span>
+        </template>
       </el-table-column>
       <!-- 0：未开始，1：进行中，2：已完成，3：已关闭 -->
       <el-table-column
@@ -194,7 +199,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/generator/manageproject/delete'),
+            url: this.$http.adornUrl('/manage-project/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

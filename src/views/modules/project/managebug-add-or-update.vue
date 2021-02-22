@@ -130,7 +130,7 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.bugId) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/managebug/info/${this.dataForm.bugId}`),
+              url: this.$http.adornUrl(`/manage-bug/info/${this.dataForm.bugId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
@@ -159,7 +159,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/managebug/${!this.dataForm.bugId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/manage-bug/${!this.dataForm.bugId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'bugId': this.dataForm.bugId || undefined,

@@ -39,7 +39,7 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.projectId) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/manageprojectuser/info/${this.dataForm.projectId}`),
+              url: this.$http.adornUrl(`/manage-projectuser/info/${this.dataForm.projectId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
@@ -55,7 +55,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/generator/manageprojectuser/${!this.dataForm.projectId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/manage-projectuser/${!this.dataForm.projectId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'projectId': this.dataForm.projectId || undefined,
