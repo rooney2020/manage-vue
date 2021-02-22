@@ -35,7 +35,7 @@
         label="项目名称">
       </el-table-column>
       <el-table-column
-        prop="managerId"
+        prop="managerName"
         header-align="center"
         align="center"
         label="负责人">
@@ -65,7 +65,7 @@
         label="备注">
       </el-table-column>
       <el-table-column
-        prop="createUserId"
+        prop="createUserName"
         header-align="center"
         align="center"
         label="创建人">
