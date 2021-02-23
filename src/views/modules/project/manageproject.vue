@@ -7,10 +7,31 @@
       <el-form-item>
         <el-select v-model="dataForm.manageId" clearable placeholder="请选择负责人">
           <el-option
-            v-for="(item,index) in citys"
+            v-for="(item,index) in manageIds"
             :key="index"
-            :label="item.remark"
-            :value="item.paramName">
+            :label="item.chineseName"
+            :value="item.userId">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-date-picker
+          v-model="dataForm.limitTime"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.status" clearable placeholder="请选择状态">
+          <el-option
+            v-for="(item,index) in statusData"
+            :key="index"
+            :label="item.statusName"
+            :value="item.status">
           </el-option>
         </el-select>
       </el-form-item>
@@ -135,9 +156,30 @@
   export default {
     data () {
       return {
+        manageIds:[],
+        statusData:[
+          {
+            status:0,
+            statusName:'未开始'
+          },
+          {
+            status:1,
+            statusName:'进行中'
+          },
+          {
+            status:2,
+            statusName:'已完成'
+          },
+          {
+            status:3,
+            statusName:'已关闭'
+          }
+        ],
         dataForm: {
           projectName: '',
-          manageId:''
+          manageId:'',
+          limitTime:'',
+          status:''
         },
         dataList: [],
         pageIndex: 1,
@@ -153,8 +195,20 @@
     },
     activated () {
       this.getDataList()
+      this.getmanageIds()
     },
     methods: {
+      getmanageIds(){
+        this.$http({
+          url: this.$http.adornUrl('/sys/user/super'),
+          method: 'get',
+          params: this.$http.adornParams({
+            chineseName:''
+          })
+        }).then(({data}) => {
+            this.manageIds=data.data
+        })
+      },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
@@ -164,7 +218,11 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'projectName': this.dataForm.projectName,
+            'manageId': this.dataForm.manageId,
+            'status': this.dataForm.status,
+            'beginDate': this.dataForm.limitTime[0],
+            'endDate':this.dataForm.limitTime[1],
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
