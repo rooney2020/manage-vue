@@ -3,12 +3,12 @@
     :title="!dataForm.projectId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="项目名称" prop="projectName">
-      <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px" :inline="true">
+    <el-form-item label="项目名称" prop="projectName" >
+      <el-input v-model="dataForm.projectName" placeholder="项目名称" style="width: 220px"></el-input>
     </el-form-item>
       <el-form-item label="负责人id" prop="managerId">
-        <el-select v-model="dataForm.managerId" clearable placeholder="请选择状态">
+        <el-select v-model="dataForm.managerId" clearable placeholder="请选择状态" style="width: 220px">
           <el-option
             v-for="(item,index) in manageIds"
             :key="index"
@@ -31,17 +31,16 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd"
+        style="width: 530px">
         </el-date-picker>
       </el-form-item>
-    <el-form-item label="总工时" prop="totalCount">
-      <el-input v-model="dataForm.totalCount" placeholder="总工时"></el-input>
+    <el-form-item label="总工时" prop="totalCount" >
+      <el-input v-model="dataForm.totalCount" placeholder="总工时" style="width: 220px"></el-input>
     </el-form-item>
-    <el-form-item label="备注" prop="comment">
-      <el-input type="textarea" :rows="2" v-model="dataForm.comment" placeholder="备注"></el-input>
-    </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="dataForm.status" clearable placeholder="请选择状态">
+
+      <el-form-item label="状态" prop="status" >
+        <el-select v-model="dataForm.status" clearable placeholder="请选择状态" style="width: 220px">
           <el-option
             v-for="(item,index) in statusData"
             :key="index"
@@ -49,6 +48,9 @@
             :value="item.status">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="备注" prop="comment">
+        <el-input type="textarea" :rows="2" v-model="dataForm.comment" placeholder="备注" style="width: 530px"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

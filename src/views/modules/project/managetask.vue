@@ -1,15 +1,34 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+      <el-form-item label="项目id" prop="projectId">
+        <el-select v-model="dataForm.projectId" clearable placeholder="请选择项目id" @change="getDataList">
+          <el-option
+            v-for="(item,index) in projectIds"
+            :key="index"
+            :label="item.projectName"
+            :value="item.projectId">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+<!--      <el-form-item>-->
+<!--        <el-button @click="getDataList()">查询</el-button>-->
+<!--        <el-button v-if="isAuth('project:managetask:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
+<!--        <el-button v-if="isAuth('project:managetask:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
+<!--      </el-form-item>-->
+    </el-form>
+    <el-row :gutter="20" style="margin-bottom: 1vh">
+      <el-col :span="18">
+        <el-button type="primary" plain ref="moren" @click="handleBtn('all')" :class="{activeFlag:option===''}">全部</el-button>
+        <el-button type="primary" plain @click="handleBtn(0)" :class="{activeFlag:option===0}">指派给我</el-button>
+        <el-button type="primary" plain @click="handleBtn(1)" :class="{activeFlag:option===1}">由我创建</el-button>
+        <el-button type="primary" plain @click="handleBtn(2)" :class="{activeFlag:option===2}">由我完成</el-button>
+      </el-col>
+      <el-col :span="6">
         <el-button v-if="isAuth('project:managetask:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('project:managetask:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
-      </el-form-item>
-    </el-form>
+      </el-col>
+    </el-row>
     <el-table
       :data="dataList"
       border
@@ -26,19 +45,22 @@
         prop="taskId"
         header-align="center"
         align="center"
-        label="自增主键">
+        label="ID"
+        width="50">
       </el-table-column>
       <el-table-column
-        prop="projectId"
+        prop="projectName"
         header-align="center"
         align="center"
-        label="项目id">
+        label="项目名"
+        :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="taskName"
         header-align="center"
         align="center"
-        label="任务名称">
+        label="任务名称"
+        :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         header-align="center"
@@ -52,13 +74,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="assigneeId"
+        prop="assignName"
         header-align="center"
         align="center"
         label="指派给">
       </el-table-column>
       <el-table-column
-        prop="completeUserId"
+        prop="completeName"
         header-align="center"
         align="center"
         label="完成者">
@@ -67,13 +89,23 @@
         prop="estimate"
         header-align="center"
         align="center"
-        label="预计">
+        label="预计"
+        width="80"
+      >
       </el-table-column>
       <el-table-column
         prop="usedTime"
         header-align="center"
         align="center"
-        label="已消耗">
+        label="已消耗"
+        width="80"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="beginDate"
+        header-align="center"
+        align="center"
+        label="开始日期">
       </el-table-column>
       <el-table-column
         prop="endDate"
@@ -82,56 +114,27 @@
         label="截止日期">
       </el-table-column>
       <el-table-column
-        prop="relatedTaskId"
-        header-align="center"
-        align="center"
-        label="相关需求">
-      </el-table-column>
-      <el-table-column
-        prop="beginDate"
-        header-align="center"
-        align="center"
-        label="开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="realBeginDate"
-        header-align="center"
-        align="center"
-        label="实际开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="finishDate"
-        header-align="center"
-        align="center"
-        label="完成时间">
-      </el-table-column>
-      <el-table-column
-        prop="taskType"
-        header-align="center"
-        align="center"
-        label="任务类型">
-        <template slot-scope="scope">
-          <span v-if="scope.row.taskType===0">需求</span>
-          <span v-if="scope.row.taskType===1">前端开发</span>
-          <span v-if="scope.row.taskType===2">后端开发</span>
-          <span v-if="scope.row.taskType===3">其他</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="comment"
-        header-align="center"
-        align="center"
-        label="任务描述">
-      </el-table-column>
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
-        width="150"
+        width="210"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.taskId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.taskId)">删除</el-button>
+          <el-button type="text" :disabled="scope.row.status!==0" title="开始">
+            <icon-svg name="kaishi" :class="[{icon:scope.row.status===0},{icon1 : scope.row.status!==0}]"></icon-svg>
+          </el-button>
+          <el-button type="text" :disabled="scope.row.status!==1" title="完成" >
+            <icon-svg name="wancheng" :class="[{icon:scope.row.status===1},{icon1 : scope.row.status!==1}]"></icon-svg>
+          </el-button>
+          <el-button type="text" :disabled="scope.row.status!==2" title="关闭">
+            <icon-svg name="jieshu4" :class="[{icon:scope.row.status===2},{icon1 : scope.row.status!==2}]"></icon-svg>
+          </el-button>
+          <el-button type="text" title="编辑">
+            <icon-svg name="bianji" class="icon"></icon-svg>
+          </el-button>
+          <el-button type="text" title="工时" @click="gongshi(scope.row)">
+            <icon-svg name="gongshi" class="icon"></icon-svg>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -146,17 +149,21 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <gongshi ref="gongshiDialog"></gongshi>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from './managetask-add-or-update'
+  import gongshi from './gongshi'
   export default {
     data () {
       return {
+        projectIds:[],
         dataForm: {
-          key: ''
+          projectId:''
         },
+        option:'',
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -167,12 +174,41 @@
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      gongshi
     },
     activated () {
       this.getDataList()
+      this.getprojectIds()
     },
     methods: {
+      //工时
+      gongshi(val){
+        let a={
+          title:val.taskName,
+          id:val.taskId
+        }
+        this.$refs.gongshiDialog.openDialog(a)
+      },
+      handleBtn(val){
+        if(val==='all'){
+          this.option=''
+        }else{
+          this.option=val
+        }
+        this.getDataList()
+      },
+      getprojectIds(){
+        this.$http({
+          url: this.$http.adornUrl('/manage-project/projects'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.projectIds=data.data
+          }
+        })
+      },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
@@ -182,7 +218,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'projectId': this.dataForm.projectId,
+            'option':this.option
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -250,3 +287,21 @@
     }
   }
 </script>
+<style>
+.mod-config .icon{
+  color: #1296db;
+  font-weight: 600;
+  font-size: 20px;
+}
+.mod-config .icon1{
+  font-weight: 600;
+  font-size: 20px;
+}
+.mod-config .el-button--text{
+  margin-right: -0.7vw;
+}
+.mod-config .activeFlag{
+  background-color: #409EFF!important;
+  color: #ffffff;
+}
+</style>

@@ -57,7 +57,9 @@
         prop="projectId"
         header-align="center"
         align="center"
-        label="ID">
+        label="ID"
+        width="60"
+      >
       </el-table-column>
       <el-table-column
         prop="projectName"
@@ -93,7 +95,8 @@
         prop="comment"
         header-align="center"
         align="center"
-        label="备注">
+        label="备注"
+        :show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="createUserName"
@@ -105,13 +108,17 @@
         prop="createTime"
         header-align="center"
         align="center"
-        label="创建时间">
+        label="创建时间"
+        :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
         prop="updateTime"
         header-align="center"
         align="center"
-        label="更新时间">
+        label="更新时间"
+        :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
         header-align="center"
