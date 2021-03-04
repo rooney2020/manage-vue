@@ -55,6 +55,9 @@
       userName: {
         get () { return this.$store.state.user.name },
         set (val) { this.$store.commit('user/updateName', val) }
+      },
+      chineseName:{
+        set(val){this.$store.commit('user/updatechineseName', val)}
       }
     },
     created () {
@@ -82,6 +85,7 @@
             this.loading = false
             this.userId = data.user.userId
             this.userName = data.user.username
+            this.chineseName=data.user.chineseName
           }
         })
       }

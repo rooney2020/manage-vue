@@ -38,7 +38,7 @@
         <el-menu-item class="site-navbar__avatar" index="3">
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link" style="color: #ffffff">
-              <img src="~@/assets/img/touxiang.jpeg" :alt="userName">{{ userName }}
+              <img src="~@/assets/img/touxiang.jpeg" :alt="userName">{{ chineseName }}
             </span>
             &nbsp;&nbsp;
             <span style="color: #ffffff" @click="msgHandle()">
@@ -90,6 +90,9 @@
       },
       userName: {
         get () { return this.$store.state.user.name }
+      },
+      chineseName:{
+        get () { return this.$store.state.user.chineseName }
       }
     },
     methods: {
