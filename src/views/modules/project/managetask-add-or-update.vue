@@ -214,6 +214,7 @@ export default {
               this.dataForm.beginDate = data.manageTask.beginDate
               this.dataForm.taskType = data.manageTask.taskType
               this.dataForm.comment = data.manageTask.comment
+              this.dataForm.status=data.manageTask.status
             }
           })
         }

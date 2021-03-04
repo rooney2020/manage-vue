@@ -120,16 +120,16 @@
         width="210"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" :disabled="scope.row.status!==0" title="开始">
+          <el-button type="text" :disabled="scope.row.status!==0" title="开始" @click="caozuo(scope.row)">
             <icon-svg name="kaishi" :class="[{icon:scope.row.status===0},{icon1 : scope.row.status!==0}]"></icon-svg>
           </el-button>
-          <el-button type="text" :disabled="scope.row.status!==1" title="完成" >
+          <el-button type="text" :disabled="scope.row.status!==1" title="完成" @click="caozuo(scope.row)">
             <icon-svg name="wancheng" :class="[{icon:scope.row.status===1},{icon1 : scope.row.status!==1}]"></icon-svg>
           </el-button>
-          <el-button type="text" :disabled="scope.row.status!==2" title="关闭">
+          <el-button type="text" :disabled="scope.row.status!==2" title="关闭" @click="caozuo(scope.row)">
             <icon-svg name="jieshu4" :class="[{icon:scope.row.status===2},{icon1 : scope.row.status!==2}]"></icon-svg>
           </el-button>
-          <el-button type="text" title="编辑">
+          <el-button type="text" title="编辑" @click="addOrUpdateHandle(scope.row.taskId)">
             <icon-svg name="bianji" class="icon"></icon-svg>
           </el-button>
           <el-button type="text" title="工时" @click="gongshi(scope.row)">
@@ -182,6 +182,21 @@
       this.getprojectIds()
     },
     methods: {
+      //操作
+      caozuo(val){
+        this.$http({
+          url: this.$http.adornUrl('/manage-task/status'),
+          method: 'post',
+          data: this.$http.adornData({
+            'taskId': val.taskId,
+            'status': val.status+1
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.getDataList()
+          }
+        })
+      },
       //工时
       gongshi(val){
         let a={
