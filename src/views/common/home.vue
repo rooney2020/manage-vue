@@ -6,7 +6,7 @@
           <el-row>
             <el-col :span="5">
               <div class="topText">
-                <p>{{userName}},您好!</p>
+                <p>{{userName}}，您好!</p>
                 <p>新的一天祝你开心快乐!</p>
                 <icon-svg name="w_aixin" class="icon"></icon-svg>
               </div>
@@ -16,21 +16,13 @@
                 <span style="color: rgba(0,0,0,.5)">{{time}}</span>
                 <span>今天剩余工作统计</span>
                 <el-row :gutter="20">
-                  <el-col :span="6">
+                  <el-col :span="12">
                     <p>我的任务</p>
                     <h5>{{taskNum}}</h5>
                   </el-col>
-                  <el-col :span="6">
-                    <p>我的项目</p>
+                  <el-col :span="12">
+                    <p>所有项目</p>
                     <h5>{{projectNum}}</h5>
-                  </el-col>
-                  <el-col :span="6">
-                    <p>进行中的项目</p>
-                    <h5>0</h5>
-                  </el-col>
-                  <el-col :span="6">
-                    <p>未关闭的项目</p>
-                    <h5>0</h5>
                   </el-col>
                 </el-row>
               </div>
@@ -40,10 +32,10 @@
       </el-col>
       <el-col :span="8">
         <div class="topRight">
-          <p v-show="isReported===false"><icon-svg name="big-circle" class="icon"></icon-svg>您还未进行疫情填报,请尽快填报</p>
+          <p v-show="isReported===false" style="color: #FF4C52"><icon-svg name="big-circle" class="icon"></icon-svg>您还未进行疫情填报,请尽快填报</p>
           <p v-show="isReported===true"><icon-svg name="big-circle" class="icon"></icon-svg>您已填写疫情报表，请注意防疫规定</p>
-          <p v-show="up===0"><icon-svg name="big-circle" class="icon"></icon-svg>您还未进行上班打卡，请注意打开时间</p>
-          <p v-show="up===1&&down===0"><icon-svg name="big-circle" class="icon"></icon-svg>您已经上班打卡，请注意下班打卡时间</p>
+          <p v-show="up===0" style="color: #FF4C52"><icon-svg name="big-circle" class="icon"></icon-svg>您还未进行上班打卡，请注意打卡时间</p>
+          <p v-show="up===1&&down===0" style="color: #FF4C52"><icon-svg name="big-circle" class="icon"></icon-svg>您已经上班打卡，请注意下班打卡时间</p>
           <p v-show="up===1&&down===1"><icon-svg name="big-circle" class="icon"></icon-svg>您今天已经完成打卡,回家注意安全</p>
         </div>
       </el-col>
@@ -91,7 +83,7 @@
     },
     computed:{
       userName:{
-        get () { return this.$store.state.user.name }
+        get () { return this.$store.state.user.chineseName }
       }
     },
     mounted () {
