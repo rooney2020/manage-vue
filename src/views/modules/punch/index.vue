@@ -48,7 +48,14 @@ name: "index.vue",
     return {
       map:null,
       amapManager,
-      punchData:null,
+      punchData:{
+        up:{
+          createTime:''
+        },
+        down:{
+          createTime:''
+        }
+      },
       area:'',
       cityCode:'',
       menuContent:'',
